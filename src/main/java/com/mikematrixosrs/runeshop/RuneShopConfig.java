@@ -22,57 +22,22 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.runelite.client.plugins.runeshop;
+package com.mikematrixosrs.runeshop;
 
-class RuneShopCalculator
+import net.runelite.client.config.Config;
+import net.runelite.client.config.ConfigGroup;
+import net.runelite.client.config.ConfigItem;
+
+@ConfigGroup("runeshop-calc")
+public interface RuneShopConfig extends Config
 {
-	static class SimResult
+	@ConfigItem(
+		keyName = "inflationPercent",
+		name = "Default price inflation %",
+		description = "Default price increase per unit purchased. 0.1 means each unit costs 0.1% more than the last, per world."
+	)
+	default double inflationPercent()
 	{
-		final long cost;
-		final int worlds;
-
-		SimResult(long cost, int worlds)
-		{
-			this.cost = cost;
-			this.worlds = worlds;
-		}
-	}
-
-	/**
-	 * Simulates buying {@code qty} units from a shop with price inflation per unit purchased.
-	 * Price resets when stock (or maxPerWorld, whichever is lower) runs out and you hop worlds.
-	 *
-	 * @param basePrice    base price of a single unit
-	 * @param stock        units available per world
-	 * @param qty          total units to buy
-	 * @param rate         fractional price increase per unit (e.g. 0.001 for 0.1%)
-	 * @param maxPerWorld  hard cap on units to buy per world, 0 = unlimited
-	 */
-	static SimResult simulate(int basePrice, int stock, int qty, double rate, int maxPerWorld)
-	{
-		if (qty <= 0)
-		{
-			return new SimResult(0, 0);
-		}
-
-		long cost = 0;
-		int remaining = qty;
-		int worlds = 0;
-
-		while (remaining > 0)
-		{
-			worlds++;
-			int cap = (maxPerWorld > 0) ? Math.min(stock, maxPerWorld) : stock;
-			int toBuy = Math.min(remaining, cap);
-
-			for (int i = 0; i < toBuy; i++)
-			{
-				cost += (long) Math.floor(basePrice * (1.0 + rate * i));
-			}
-
-			remaining -= toBuy;
-		}
-
-		return new SimResult(cost, worlds);
+		return 0.1;
 	}
 }

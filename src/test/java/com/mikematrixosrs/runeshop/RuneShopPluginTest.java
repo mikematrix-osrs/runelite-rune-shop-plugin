@@ -22,22 +22,16 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.runelite.client.plugins.runeshop;
+package com.mikematrixosrs.runeshop;
 
-import net.runelite.client.config.Config;
-import net.runelite.client.config.ConfigGroup;
-import net.runelite.client.config.ConfigItem;
+import net.runelite.client.RuneLite;
+import net.runelite.client.externalplugins.ExternalPluginManager;
 
-@ConfigGroup("runeshop-calc")
-public interface RuneShopConfig extends Config
+public class RuneShopPluginTest
 {
-	@ConfigItem(
-		keyName = "inflationPercent",
-		name = "Default price inflation %",
-		description = "Default price increase per unit purchased. 0.1 means each unit costs 0.1% more than the last, per world."
-	)
-	default double inflationPercent()
+	public static void main(String[] args) throws Exception
 	{
-		return 0.1;
+		ExternalPluginManager.loadBuiltin(RuneShopPlugin.class);
+		RuneLite.main(args);
 	}
 }
